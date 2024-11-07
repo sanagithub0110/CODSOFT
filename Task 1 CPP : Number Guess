@@ -1,0 +1,27 @@
+#include<iostream>
+#include<cstdlib>
+int main(){
+    int generated = rand() % 50 + 1;
+    int user = 0;
+
+    std::cout << "Let's Go Guessing!"<<std::endl;
+    std::cout << "Can you guess the number on my mind?!"<<std::endl;
+    std::cout << "Hint : It's between 1 to 50 "<<std::endl;
+    while (user != generated) {
+        std::cout << "Guess! ";
+        std::cin >> user;
+        if(user>50){
+            std::cout << "Oh! You missed the hint!"<<std::endl;
+        }
+        else if (user > generated) {
+            std::cout << "That's too higher than the number on my mind"<<std::endl;
+        } 
+        else if (user < generated) {
+            std::cout << "That's too lower than the number on my mind"<<std::endl;
+        } 
+        else {
+            std::cout << "Woah! You are a mind-reader" <<std::endl<<"The number on my mind was "<< generated << std::endl;
+        }
+    }
+    return 0;
+}
