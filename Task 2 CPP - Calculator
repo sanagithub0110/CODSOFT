@@ -1,0 +1,74 @@
+#include<iostream>
+using namespace std;
+int main(){
+    int a,b,sum,sub,mul;
+    double divv1, divv2, rem1, rem2;
+    cout<<"HELLO!"<<endl;
+    cout<<"Enter the first number"<<endl;
+    cin>>a;
+    cout<<"Enter the second number"<<endl;
+    cin>>b;
+    int ch;
+    do
+    {
+        cout<<"\n\t Calculator";
+        cout<<"\n\t 1. Add ";
+        cout<<"\n\t 2. Subtract ";
+        cout<<"\n\t 3. Multiply ";
+        cout<<"\n\t 4. Divide a by b";
+        cout<<"\n\t 5. Divide b by a ";
+        cout<<"\n\t 6. Exit ";
+        cout<<"\n\t Enter your Choice : ";
+        cin>>ch;
+        switch(ch)
+        {
+        case 1:
+              sum=a+b;
+              cout<<"SUM = "<<sum;
+              break;
+                
+        case 2: 
+              sub=a-b;
+              cout<<"DIFFERENCE = "<<sub;
+              break;
+              
+        case 3:
+              mul=a*b;
+              cout<<"PRODUCT = "<<mul;
+              break;
+              
+        case 4:
+              if(b!=0){
+                  divv1=a/b;
+                  rem1=a%b;
+                  cout<<"QUOTIENT = "<<divv1<<endl;
+                  cout<<"REMAINDER = "<<rem1;
+              }
+              else{
+                  cout<<"Number can not be divided by zero";
+              }
+              break;
+              
+        case 5:
+              if(a!=0){
+                  divv2=b/a;
+                  rem2=a%b;
+                  cout<<"QUOTIENT = "<<divv2<<endl;
+                  cout<<"REMAINDER = "<<rem2;
+              }
+              else{
+                  cout<<"Number can not be divided by zero";
+              }
+              break;
+              
+        case 6:
+              cout<<"EXIT - THANK YOU! ";
+              break;
+              
+        default:
+            cout << "\n Unknown choice";
+        }
+       
+
+    } while(ch!=6);
+}
