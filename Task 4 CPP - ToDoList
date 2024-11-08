@@ -1,0 +1,161 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+const int MAX = 20; 
+
+class Task {
+    string description; 
+    int priority;       
+    bool completed;
+    friend class ToDoList; 
+    
+public:
+    void getdata() {
+        cout << "Enter Task Description: "<<endl;
+        cin.ignore();
+        getline(cin, description);
+        cout << "Enter Task Priority (Enter number values): "<<endl;
+        cin >> priority;
+        completed = false;
+    }
+
+    void putdata() const {
+        cout <<endl<< description << "\t\t" << priority << "\t\t"<< (completed ? "Completed" : "Pending")<<endl<<endl;
+    }
+};
+
+class ToDoList {
+    int front, rear;   
+    Task tasks[MAX]; 
+
+public:
+    ToDoList() : front(-1), rear(-1) {} 
+
+    bool isEmpty();          
+    bool isFull();           
+    void insertTask();       
+    void removeTask();       
+    void displayTasks();     
+    void markTaskCompleted(); 
+};
+
+bool ToDoList::isEmpty() {
+    return (front == -1 || front > rear);
+}
+
+bool ToDoList::isFull() {
+    return (rear == MAX - 1);
+}
+
+void ToDoList::insertTask() {
+    if (isFull()) {
+        cout << "To-Do List is Full!"<<endl<<endl;
+        return;
+    }
+    Task newTask;
+    newTask.getdata();
+
+    if (rear == -1) {
+        front = rear = 0;
+        tasks[rear] = newTask;
+    } else {
+        int i = rear;
+        while (i >= front && tasks[i].priority > newTask.priority) {
+            tasks[i + 1] = tasks[i];
+            i--;
+        }
+        tasks[i + 1] = newTask;
+        rear++;
+    }
+    cout << "\nTask added to To-Do List."<<endl<<endl;
+}
+
+void ToDoList::removeTask() {
+    if (isEmpty()) {
+        cout << "\nTo-Do List is Empty!"<<endl<<endl;
+    } else {
+        cout << "\nTask removed from To-Do List: "<<endl;
+        tasks[front].putdata();
+        front++; 
+        
+        if (front > rear) {
+            front = rear = -1;
+        }
+    }
+}
+
+void ToDoList::displayTasks() {
+    if (isEmpty()) {
+        cout << "\nTo-Do List is Empty."<<endl<<endl;
+    } else {
+        cout << "\nTask Description\tPriority\tStatus"<<endl<<endl;
+        for (int i = front; i <= rear; i++) {
+            tasks[i].putdata(); 
+        }
+    }
+}
+
+void ToDoList::markTaskCompleted() {
+    if (isEmpty()) {
+        cout << "\nTo-Do List is Empty."<<endl<<endl;
+        return;
+    }
+
+    int taskNumber;
+    cout << "\nEnter the task number to mark as completed (1 to " << (rear - front + 1) << "): "<<endl;
+    cin >> taskNumber;
+
+    if (taskNumber < 1 || taskNumber > (rear - front + 1)) {
+        cout << "\nInvalid task number."<<endl<<endl;
+    } else {
+        tasks[front + taskNumber - 1].completed = true;
+        cout << "\nTask marked as completed."<<endl<<endl;
+    }
+}
+
+int main() {
+    int choice;
+    ToDoList list; 
+    
+    do {
+        cout << "To-Do List Manager"<<endl;;
+        cout << "1. Add Task"<<endl;
+        cout << "2. View Tasks"<<endl;
+        cout << "3. Remove Task"<<endl;
+        cout << "4. Mark Task as Completed"<<endl;
+        cout << "5. Exit"<<endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                list.insertTask(); 
+                break;
+
+            case 2:
+                cout << "Tasks in the To-Do List:"<<endl;
+                list.displayTasks(); 
+                break;
+
+            case 3:
+                list.removeTask(); 
+                cout << "Remaining tasks in the To-Do List:"<<endl;
+                list.displayTasks(); 
+                break;
+
+            case 4:
+                list.markTaskCompleted(); 
+                break;
+
+            case 5:
+                cout << "Exiting To-Do List Manager"<<endl;
+                break; 
+                
+            default:
+                cout << "Invalid choice. Please try again."<<endl;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
