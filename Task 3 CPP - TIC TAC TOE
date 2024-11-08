@@ -5,41 +5,61 @@ using namespace std;
 void grid(char *boxes);
 void user(char *boxes, char player);
 void bot(char *boxes, char computer);
-bool winner(char *boxes, char player, char computer);
+bool winner(char *boxes, char player, char computer, bool &playerWon);
 bool tie(char *boxes);
 
 int main() {
-    char boxes[9] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
     char player = 'X';
     char computer = 'O';
-    bool playing = true;
-    grid(boxes);  
+    bool playing;
+    do {
+        char boxes[9] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+        bool playerWon = false;
+        playing = true;
 
-    while (playing) {
-        user(boxes, player);
-        if (winner(boxes, player, computer)) {
-            grid(boxes); 
-            playing = false;
-            break;
-        } else if (tie(boxes)) {
-            grid(boxes); 
-            playing = false;
-            break;
+        grid(boxes);
+
+        while (playing) {
+            user(boxes, player);
+
+            if (winner(boxes, player, computer, playerWon)) {
+                grid(boxes);
+                playing = false;
+                break;
+            } else if (tie(boxes)) {
+                grid(boxes); 
+                playing = false;
+                break;
+            }
+            bot(boxes, computer);
+            grid(boxes);
+            if (winner(boxes, player, computer, playerWon)) {
+                playing = false;
+                break;
+            } else if (tie(boxes)) {
+                playing = false;
+                break;
+            }
         }
-        bot(boxes, computer);
-        grid(boxes); 
-        if (winner(boxes, player, computer)) {
-            playing = false;
-            break;
-        } else if (tie(boxes)) {
-            playing = false;
-            break;
+        if (playerWon) {
+            cout << "YOU WIN!" << endl;
+        } else if (!tie(boxes)) {
+            cout << "YOU LOSE!" << endl;
+        } else {
+            cout << "TIE!" << endl;
         }
-    }
+        char choice;
+        cout << "Do you want to play again? (y/n): ";
+        cin >> choice;
+        playing = (choice == 'y' || choice == 'Y');
+    } while (playing);
+
+    cout << "Thank you for playing!" << endl;
     return 0;
 }
 void grid(char *boxes) {
     cout << endl;
+    cout << "     |     |      " << endl;
     cout << "  " << boxes[0] << "  |  " << boxes[1] << "  |  " << boxes[2] << "  " << endl;
     cout << "_____|_____|_____" << endl;
     cout << "     |     |     " << endl;
@@ -47,12 +67,13 @@ void grid(char *boxes) {
     cout << "_____|_____|_____" << endl;
     cout << "     |     |     " << endl;
     cout << "  " << boxes[6] << "  |  " << boxes[7] << "  |  " << boxes[8] << "  " << endl;
+    cout << "     |     |     " << endl;
     cout << endl;
 }
 void user(char *boxes, char player) {
     int n;
     do {
-        cout << "Where do you want to put X ? (1-9): ";
+        cout << "Where do you want to put X? (1-9): ";
         cin >> n;
         n--;
         if (n >= 0 && n < 9 && boxes[n] == ' ') {  // Ensure valid input
@@ -71,35 +92,19 @@ void bot(char *boxes, char computer) {
         }
     }
 }
-bool winner(char *boxes, char player, char computer) {
-    if ((boxes[0] != ' ') && (boxes[0] == boxes[1]) && (boxes[1] == boxes[2])) {
-        boxes[0] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!";
-    } 
-    else if ((boxes[3] != ' ') && (boxes[3] == boxes[4]) && (boxes[4] == boxes[5])) {
-        boxes[3] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!";
-    } 
-    else if ((boxes[6] != ' ') && (boxes[6] == boxes[7]) && (boxes[7] == boxes[8])) {
-        boxes[6] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!\n";
-    } 
-    else if ((boxes[0] != ' ') && (boxes[0] == boxes[3]) && (boxes[3] == boxes[6])) {
-        boxes[0] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!\n";
-    } 
-    else if ((boxes[1] != ' ') && (boxes[1] == boxes[4]) && (boxes[4] == boxes[7])) {
-        boxes[1] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!\n";
-    } 
-    else if ((boxes[2] != ' ') && (boxes[2] == boxes[5]) && (boxes[5] == boxes[8])) {
-        boxes[2] == player ? cout << "YOU WIN!\n" : cout << "YOU LOSE!\n";
-    } 
-    else if ((boxes[0] != ' ') && (boxes[0] == boxes[4]) && (boxes[4] == boxes[8])) {
-        boxes[0] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!\n";
-    } 
-    else if ((boxes[2] != ' ') && (boxes[2] == boxes[4]) && (boxes[4] == boxes[6])) {
-        boxes[2] == player ? cout << "YOU WIN!\n" : cout << "YOU LOSE!\n";
-    } 
-    else {
-        return false;
+bool winner(char *boxes, char player, char computer, bool &playerWon) {
+    if ((boxes[0] != ' ') && (boxes[0] == boxes[1]) && (boxes[1] == boxes[2]) ||
+        (boxes[3] != ' ') && (boxes[3] == boxes[4]) && (boxes[4] == boxes[5]) ||
+        (boxes[6] != ' ') && (boxes[6] == boxes[7]) && (boxes[7] == boxes[8]) ||
+        (boxes[0] != ' ') && (boxes[0] == boxes[3]) && (boxes[3] == boxes[6]) ||
+        (boxes[1] != ' ') && (boxes[1] == boxes[4]) && (boxes[4] == boxes[7]) ||
+        (boxes[2] != ' ') && (boxes[2] == boxes[5]) && (boxes[5] == boxes[8]) ||
+        (boxes[0] != ' ') && (boxes[0] == boxes[4]) && (boxes[4] == boxes[8]) ||
+        (boxes[2] != ' ') && (boxes[2] == boxes[4]) && (boxes[4] == boxes[6])) {
+        playerWon = (boxes[0] == player || boxes[3] == player || boxes[6] == player || boxes[1] == player || boxes[4] == player || boxes[7] == player || boxes[2] == player || boxes[5] == player);
+        return true;
     }
-    return true;
+    return false;
 }
 bool tie(char *boxes) {
     for (int i = 0; i < 9; i++) {
@@ -107,6 +112,5 @@ bool tie(char *boxes) {
             return false;
         }
     }
-    cout << "OH-OH! IT'S A TIE!\n";
     return true;
 }
