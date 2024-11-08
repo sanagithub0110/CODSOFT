@@ -1,0 +1,112 @@
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+void grid(char *boxes);
+void user(char *boxes, char player);
+void bot(char *boxes, char computer);
+bool winner(char *boxes, char player, char computer);
+bool tie(char *boxes);
+
+int main() {
+    char boxes[9] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+    char player = 'X';
+    char computer = 'O';
+    bool playing = true;
+    grid(boxes);  
+
+    while (playing) {
+        user(boxes, player);
+        if (winner(boxes, player, computer)) {
+            grid(boxes); 
+            playing = false;
+            break;
+        } else if (tie(boxes)) {
+            grid(boxes); 
+            playing = false;
+            break;
+        }
+        bot(boxes, computer);
+        grid(boxes); 
+        if (winner(boxes, player, computer)) {
+            playing = false;
+            break;
+        } else if (tie(boxes)) {
+            playing = false;
+            break;
+        }
+    }
+    return 0;
+}
+void grid(char *boxes) {
+    cout << endl;
+    cout << "  " << boxes[0] << "  |  " << boxes[1] << "  |  " << boxes[2] << "  " << endl;
+    cout << "_____|_____|_____" << endl;
+    cout << "     |     |     " << endl;
+    cout << "  " << boxes[3] << "  |  " << boxes[4] << "  |  " << boxes[5] << "  " << endl;
+    cout << "_____|_____|_____" << endl;
+    cout << "     |     |     " << endl;
+    cout << "  " << boxes[6] << "  |  " << boxes[7] << "  |  " << boxes[8] << "  " << endl;
+    cout << endl;
+}
+void user(char *boxes, char player) {
+    int n;
+    do {
+        cout << "Where do you want to put X ? (1-9): ";
+        cin >> n;
+        n--;
+        if (n >= 0 && n < 9 && boxes[n] == ' ') {  // Ensure valid input
+            boxes[n] = player;
+            break;
+        }
+    } while (true);
+}
+void bot(char *boxes, char computer) {
+    int n;
+    while (true) {
+        n = rand() % 9;
+        if (boxes[n] == ' ') {
+            boxes[n] = computer;
+            break;
+        }
+    }
+}
+bool winner(char *boxes, char player, char computer) {
+    if ((boxes[0] != ' ') && (boxes[0] == boxes[1]) && (boxes[1] == boxes[2])) {
+        boxes[0] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!";
+    } 
+    else if ((boxes[3] != ' ') && (boxes[3] == boxes[4]) && (boxes[4] == boxes[5])) {
+        boxes[3] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!";
+    } 
+    else if ((boxes[6] != ' ') && (boxes[6] == boxes[7]) && (boxes[7] == boxes[8])) {
+        boxes[6] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!\n";
+    } 
+    else if ((boxes[0] != ' ') && (boxes[0] == boxes[3]) && (boxes[3] == boxes[6])) {
+        boxes[0] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!\n";
+    } 
+    else if ((boxes[1] != ' ') && (boxes[1] == boxes[4]) && (boxes[4] == boxes[7])) {
+        boxes[1] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!\n";
+    } 
+    else if ((boxes[2] != ' ') && (boxes[2] == boxes[5]) && (boxes[5] == boxes[8])) {
+        boxes[2] == player ? cout << "YOU WIN!\n" : cout << "YOU LOSE!\n";
+    } 
+    else if ((boxes[0] != ' ') && (boxes[0] == boxes[4]) && (boxes[4] == boxes[8])) {
+        boxes[0] == player ? cout << "YOU WIN!" : cout << "YOU LOSE!\n";
+    } 
+    else if ((boxes[2] != ' ') && (boxes[2] == boxes[4]) && (boxes[4] == boxes[6])) {
+        boxes[2] == player ? cout << "YOU WIN!\n" : cout << "YOU LOSE!\n";
+    } 
+    else {
+        return false;
+    }
+    return true;
+}
+bool tie(char *boxes) {
+    for (int i = 0; i < 9; i++) {
+        if (boxes[i] == ' ') {
+            return false;
+        }
+    }
+    cout << "OH-OH! IT'S A TIE!\n";
+    return true;
+}
